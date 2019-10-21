@@ -82,27 +82,25 @@ function Bissecante(enl :: EquacaoNL{T};
     	if abs(gx) < atol
       status = :falha
       break
+      end
+      b, fb = a, fa
+      a -= fa / gx
+      fa = f(a)
+      resolvido = abs(fa) ≤ ϵ
+      Δt = time() - start_time
+      iter += 1
+      excedido = Δt > max_time || iter ≥ max_iter || contador(enl) ≥ max_eval
     end
-    
-    b, fb = a, fa
-    a -= fa / gx
-    fa = f(a)
-    resolvido = abs(fa) ≤ ϵ
-    Δt = time() - start_time
-    iter += 1
-    excedido = Δt > max_time || iter ≥ max_iter || contador(enl) ≥ max_eval
-    
-   end
 
-   if resolvido
+    if resolvido
       status = :resolvido
-   elseif excedido
+    elseif excedido
       if Δt > max_time
          status = :max_time
       else
          status = :max_iter
       end
-   end
-   end
+    end
+  end
   return x, fx, status, iter, Δt
 end
